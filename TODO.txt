@@ -1,0 +1,7 @@
+=======
+ To do
+=======
+
+* import/export of .sng files (songs)
+* import/export of .col files (schedules)
+
