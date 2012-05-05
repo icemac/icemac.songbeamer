@@ -49,7 +49,7 @@ class SngParseTests(unittest.TestCase):
 
 
 class SngPropertiesTests(unittest.TestCase):
-    """Testing .sng.SNG's properties."""
+    """Testing ..sng.SNG's properties."""
 
     def callPUT(self, name, raw_value, conv_value):
         from ..sng import SNG
@@ -83,3 +83,31 @@ class SngPropertiesTests(unittest.TestCase):
         self.callPUT('Chords',
                      b'MTMsMCxEDTcsMTAsRQ0=',
                      [['13', '0', 'D'], ['7', '10', 'E']])
+
+
+class SngExportTests(unittest.TestCase):
+    """Testing ..sng.SNG.export()."""
+
+    def test_export_converts_data_back_to_byte_stream(self):
+        from .. import SNG
+        from io import BytesIO
+        sng = SNG()
+        sng.data.update({
+            'Version': 3,
+            'Categories': ['foo bar', 'baz'],
+            'Text': ['Textüäl cöntents',
+                     'inclüdig newlines',
+                     '---',
+                     'Möre text'],
+            'Title': 'Mÿ nïcë=tïtlë'})
+        export_result = BytesIO()
+        sng.export(export_result)
+        self.assertEqual(
+            '#Version=3\r\n'
+            '#Categories=foo bar, baz\r\n'
+            '#Title=Mÿ nïcë=tïtlë\r\n'
+            '---\r\n'
+            'Textüäl cöntents\r\n'
+            'inclüdig newlines\r\n'
+            '---\r\n'
+            'Möre text'.encode(ENCODING), export_result.getvalue())

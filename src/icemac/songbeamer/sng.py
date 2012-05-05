@@ -75,6 +75,16 @@ class SNG(metaclass=SNGMeta):
         instance._parse_head(head.splitlines())
         return instance
 
+    def export(self, byte_stream):
+        for key in self.data:
+            if key == 'Text':
+                # Text needs to be the last line
+                continue
+            byte_stream.write(
+                b'#'+key.encode(ENCODING)+b'='+getattr(self, key)+b'\r\n')
+        byte_stream.write(b'---\r\n')
+        byte_stream.write(self.Text)
+
     def _parse_head(self, lines):
         for line in lines:
             key, value = HEADLINE_RE.search(line).groups()
