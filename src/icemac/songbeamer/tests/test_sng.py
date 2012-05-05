@@ -49,7 +49,7 @@ class SngParseTests(unittest.TestCase):
 
 
 class SngPropertiesTests(unittest.TestCase):
-    """Testing .sng.SNG's converting properties."""
+    """Testing .sng.SNG's properties."""
 
     def callPUT(self, name, raw_value, conv_value):
         from ..sng import SNG
@@ -57,6 +57,9 @@ class SngPropertiesTests(unittest.TestCase):
         setattr(sng, name, raw_value)
         self.assertEqual(conv_value, sng.data[name])
         self.assertEqual(raw_value, getattr(sng, name))
+
+    def test_Title(self):
+        self.callPUT('Title', 'Tïtlë'.encode(ENCODING), 'Tïtlë')
 
     def test_Text(self):
         self.callPUT('Text', b'a\r\nb', ['a', 'b'])

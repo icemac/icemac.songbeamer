@@ -78,7 +78,7 @@ class SNG(metaclass=SNGMeta):
     def _parse_head(self, lines):
         for line in lines:
             key, value = HEADLINE_RE.search(line).groups()
-            key = key.decode('cp1252')
+            key = key.decode(ENCODING)
             setattr(self, key, value)
 
     def __setattr__(self, key, value):
@@ -91,9 +91,9 @@ class SNG(metaclass=SNGMeta):
             prop.fset(self, value)
         else:
             # There is no property for key, so store it plain:
-            self.data[key] = value.decode('cp1252')
+            self.data[key] = value.decode(ENCODING)
 
     def __getattr__(self, key):
-        return self.data[key]
+        return self.data[key].encode(ENCODING)
 
 
