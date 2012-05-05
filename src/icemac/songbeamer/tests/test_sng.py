@@ -3,7 +3,15 @@
 # See also LICENSE.txt
 
 from .. import ENCODING
+import difflib
+import io
+import os
+import pkg_resources
+import subprocess
+import sys
+import tempfile
 import unittest
+
 
 SIMPLE = """\
 #Title=Mÿ nïcë=tïtlë
@@ -111,3 +119,48 @@ class SngExportTests(unittest.TestCase):
             'inclüdig newlines\r\n'
             '---\r\n'
             'Möre text'.encode(ENCODING), export_result.getvalue())
+
+
+class Sng2sngTests(unittest.TestCase):
+    """Testing ..sng.sng2sng()."""
+
+    def callFUT(self, *args):
+        from ..sng import sng2sng
+        orig_stdout = sys.stdout
+        orig_argv = sys.argv[:]
+        stdout = io.StringIO()
+        argv = ['sng2sng']
+        argv.extend(args)
+        try:
+            sys.stdout = stdout
+            sys.argv[:] = argv
+            try:
+                sng2sng()
+            except SystemExit as e:
+                raise SystemExit(str(e), stdout.getvalue())
+        finally:
+            sys.stdout = orig_stdout
+            sys.argv[:] = orig_argv
+
+    def test_wrong_number_of_args_leads_to_error_message(self):
+        with self.assertRaises(SystemExit) as err:
+            self.callFUT('input.sng')
+        self.assertEqual(('1', 'Usage: sng2sng <input-file> <output-file>\n'),
+                         err.exception.args)
+
+    def test_output_is_equal_input_after_conversion(self):
+        in_filename = pkg_resources.resource_filename(
+            'icemac.songbeamer.tests', 'example.sng')
+        try:
+            out_fd, out_filename = tempfile.mkstemp()
+            os.close(out_fd)
+            self.callFUT(in_filename, out_filename)
+            with open(in_filename, 'U') as in_file:
+                in_file_cont = in_file.readlines()
+            with open(out_filename, 'U') as out_file:
+                out_file_cont = out_file.readlines()
+            # There are no differences between input and output:
+            self.assertEqual(
+                [], list(difflib.context_diff(in_file_cont, out_file_cont)))
+        finally:
+            os.unlink(out_filename)

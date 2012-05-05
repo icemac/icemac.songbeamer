@@ -107,3 +107,12 @@ class SNG(metaclass=SNGMeta):
         return self.data[key].encode(ENCODING)
 
 
+def sng2sng():
+    """Console script to transform an .sng file through the SNG class."""
+    import sys
+    if len(sys.argv) != 3:
+        print('Usage: {} <input-file> <output-file>'.format(sys.argv[0]))
+        sys.exit(1)
+    with open(sys.argv[1], 'rb') as input:
+        with open(sys.argv[2], 'wb') as output:
+            SNG.parse(input).export(output)

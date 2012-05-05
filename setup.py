@@ -64,4 +64,8 @@ setuptools.setup(
         ],
     tests_require=[],
     test_suite="icemac.songbeamer.tests",
+    entry_points="""
+      [console_scripts]
+      sng2sng = icemac.songbeamer.sng:sng2sng
+      """,
     )
