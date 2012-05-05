@@ -2,6 +2,13 @@
  To do
 =======
 
-* import/export of .sng files (songs)
+Implementations
+=========
+
+* export of .sng files (songs)
 * import/export of .col files (schedules)
 
+Open Questions
+==============
+
+* Are `Transpose` and `Speed` int values?
