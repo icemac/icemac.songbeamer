@@ -55,6 +55,10 @@ setuptools.setup(
     namespace_packages = ['icemac'],
     include_package_data=True,
     zip_safe=False,
+    setup_requires=[
+        'nose>=1.0',
+        'coverage',
+        ],
     install_requires=[
         'setuptools',
         ],

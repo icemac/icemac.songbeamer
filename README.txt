@@ -1,3 +1,4 @@
+
 ===================
  icemac.songbeamer
 ===================
@@ -21,3 +22,16 @@ Supported Python version
 ========================
 
 At least Python 3.2 is required.
+
+Running Tests
+=============
+
+To run the tests call::
+
+  $ python3.2 setup.py test -q
+
+or (with coverage analysis)::
+
+  $ python3.2 setup.py nosetests
+
+
