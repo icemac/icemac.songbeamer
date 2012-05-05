@@ -32,14 +32,17 @@ class SngParseTests(unittest.TestCase):
 
     def test_parses_head_and_text_into_dict(self):
         self.assertEqual(
-            {'Text': 'Textüäl cöntents\ninclüdig newlines\n---\nMöre text\n',
+            {'Text': ['Textüäl cöntents',
+                      'inclüdig newlines',
+                      '---',
+                      'Möre text'],
              'Title': 'Mÿ nïcë=tïtlë',
              'Description': 'I wröte ä söng ...'},
             self.callFUT(SIMPLE))
 
     def test_post_processes_some_keys(self):
         self.assertEqual(
-            {'Text': '',
+            {'Text': [],
              'Categories': ['füü bär', 'asdf'],
              'Version': 3
                 }, self.callFUT(CONVERTING_VALUES))
@@ -54,6 +57,9 @@ class SngPropertiesTests(unittest.TestCase):
         setattr(sng, name, raw_value)
         self.assertEqual(conv_value, sng.data[name])
         self.assertEqual(raw_value, getattr(sng, name))
+
+    def test_Text(self):
+        self.callPUT('Text', b'a\r\nb', ['a', 'b'])
 
     def test_Version(self):
         self.callPUT('Version', b'3', 3)

@@ -17,6 +17,8 @@ int_to_bytes = lambda x: bytes(str(x), ENCODING)
 # SNG.data
 CONVERTING_PROPERTIES = [
     # name, get converter, set converter
+    ('Text', lambda x: ('\r\n'.join(x)).encode(ENCODING),
+             lambda x: x.decode(ENCODING).splitlines()),
     ('Version', int_to_bytes, int),
     ('LangCount', int_to_bytes, int),
     ('Comments', lambda x: b64encode(x.encode(ENCODING)),
@@ -67,9 +69,9 @@ class SNG(metaclass=SNGMeta):
     def parse(cls, byte_stream):
         """Parse the contents of a .sng file to a dict."""
         data = byte_stream.read()
-        head, text = data.split(b'---\n', 1)
+        head, text = data.split(b'---', 1)
         instance = cls()
-        instance.Text = text
+        instance.Text = text.strip()
         instance._parse_head(head.splitlines())
         return instance
 

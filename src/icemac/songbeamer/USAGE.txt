@@ -1,0 +1,22 @@
+=======
+ Usage
+=======
+
+Importing a .sng file
+=====================
+
+To import a .sng file call:
+
+  >>> from icemac.songbeamer import SNG
+  >>> with open('example.sng', 'rb') as file:
+  ...     sng = SNG.parse(file)
+  >>> sng.data
+  {'Text': ['La la la', '---', 'Lei lei lei'],
+   'Version': 3,
+   'Author': 'me'}
+
+To access the raw values imported from the .sng file access them using
+getattr:
+
+  >>> sng.Version
+  b'3'

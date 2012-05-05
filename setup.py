@@ -7,8 +7,8 @@ import setuptools
 import sys
 
 
-def read(*path_elements):
-    return "\n\n" + open(os.path.join(*path_elements)).read()
+def read(path):
+    return open(os.path.join(*path.split('/'))).read()
 
 
 version = '0.1.0dev'
@@ -19,11 +19,12 @@ setuptools.setup(
     version=version,
     description=(
         "Python 3 library to import from and export to SongBeamer format."),
-    long_description=(
-        read('README.txt') +
-        read('TODO.txt') +
-        read('CHANGES.txt')
-        ),
+    long_description="\n\n".join([
+        read('README.txt'),
+        read('CHANGES.txt'),
+        read('TODO.txt'),
+        read('src/icemac/songbeamer/USAGE.txt'),
+        ]),
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Framework :: Buildout',
