@@ -2,7 +2,7 @@
 # Copyright (c) 2012 Michael Howitz
 # See also LICENSE.txt
 
-from . import ENCODING
+from .. import ENCODING
 import unittest
 
 SIMPLE = """\
@@ -23,11 +23,11 @@ CONVERTING_VALUES = """\
 
 
 class SngParseTests(unittest.TestCase):
-    """Testing .sng.SNG.parse()."""
+    """Testing ..sng.SNG.parse()."""
 
     def callFUT(self, stream):
         from io import BytesIO
-        from .sng import SNG
+        from ..sng import SNG
         return SNG.parse(BytesIO(stream)).data
 
     def test_parses_head_and_text_into_dict(self):
@@ -49,7 +49,7 @@ class SngPropertiesTests(unittest.TestCase):
     """Testing .sng.SNG's converting properties."""
 
     def callPUT(self, name, raw_value, conv_value):
-        from .sng import SNG
+        from ..sng import SNG
         sng = SNG()
         setattr(sng, name, raw_value)
         self.assertEqual(conv_value, sng.data[name])
