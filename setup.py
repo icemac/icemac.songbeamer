@@ -27,8 +27,6 @@ setuptools.setup(
         ]),
     classifiers=[
         'Development Status :: 3 - Alpha',
-        'Framework :: Buildout',
-        'Framework :: Buildout :: Recipe',
         'Intended Audience :: Developers',
         'Intended Audience :: Religion',
         'License :: OSI Approved',
