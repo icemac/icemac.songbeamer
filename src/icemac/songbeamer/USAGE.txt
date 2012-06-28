@@ -33,6 +33,7 @@ To export to a .sng file use the ``export`` method. It expects a byte stream (io
 
   >>> with TemporaryFile() as file:
   ...     sng.export(file)
+  ...     _ = file.seek(0)
   ...     pprint(file.readlines())
   [b'#Version=3\r\n',
    b'#Author=me\r\n',
