@@ -33,20 +33,26 @@ CONVERTING_VALUES = """\
 class SngParseTests(unittest.TestCase):
     """Testing ..sng.SNG.parse()."""
 
-    def callFUT(self, stream):
+    def callFUT(self, data, as_stream=False):
         from io import BytesIO
         from ..sng import SNG
-        return SNG.parse(BytesIO(stream)).data
+        if as_stream:
+            data = BytesIO(data)
+        return SNG.parse(data).data
 
-    def test_parses_head_and_text_into_dict(self):
-        self.assertEqual(
-            {'Text': ['Textüäl cöntents',
-                      'inclüdig newlines',
-                      '---',
-                      'Möre text'],
-             'Title': 'Mÿ nïcë=tïtlë',
-             'Description': 'I wröte ä söng ...'},
-            self.callFUT(SIMPLE))
+    SIMPLE_parsed = {'Text': ['Textüäl cöntents',
+                              'inclüdig newlines',
+                              '---',
+                              'Möre text'],
+                     'Title': 'Mÿ nïcë=tïtlë',
+                     'Description': 'I wröte ä söng ...'}
+    def test_parses_head_and_text_into_dict_from_bytes(self):
+        self.assertEqual(self.SIMPLE_parsed,
+                         self.callFUT(SIMPLE, as_stream=False))
+
+    def test_parses_head_and_text_into_dict_from_byte_stream(self):
+        self.assertEqual(self.SIMPLE_parsed,
+                         self.callFUT(SIMPLE, as_stream=True))
 
     def test_post_processes_some_keys(self):
         self.assertEqual(

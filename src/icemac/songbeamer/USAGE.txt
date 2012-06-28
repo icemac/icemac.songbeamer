@@ -5,11 +5,19 @@
 Importing a .sng file
 =====================
 
-To import a .sng file use the ``parse`` class method. It expects a byte stream (io.BytesIO or open file) as argument to read from:
+To import a .sng file use the ``parse`` class method. It expects a byte
+stream (io.BytesIO or open file) or a bytes object as argument to read from:
 
   >>> from icemac.songbeamer import SNG
   >>> with open('example.sng', 'rb') as file:
   ...     sng = SNG.parse(file)
+
+  >>> with open('example.sng', 'rb') as file:
+  ...     sng = SNG.parse(file.read())
+
+
+Accessing a file's data
+=======================
 
 The parsed data is stored in the ``data`` attribute of the object:
 

@@ -66,9 +66,12 @@ class SNG(metaclass=SNGMeta):
         self.__dict__['data'] = {}
 
     @classmethod
-    def parse(cls, byte_stream):
+    def parse(cls, bytes_or_byte_stream):
         """Parse the contents of a .sng file to a dict."""
-        data = byte_stream.read()
+        if isinstance(bytes_or_byte_stream, bytes):
+            data = bytes_or_byte_stream
+        else:
+            data = bytes_or_byte_stream.read()
         head, text = data.split(b'---', 1)
         instance = cls()
         instance.Text = text.strip()
