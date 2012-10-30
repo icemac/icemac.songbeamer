@@ -56,7 +56,7 @@ class SNGMeta(type):
         for name, get_converter, set_converter in CONVERTING_PROPERTIES:
             dict[name] = property(fget=getter_factory(name, get_converter),
                                   fset=setter_factory(name, set_converter))
-        return type.__new__(mcs, name, bases, dict)
+        return super(SNGMeta, mcs).__new__(mcs, name, bases, dict)
 
 
 class SNG(metaclass=SNGMeta):
