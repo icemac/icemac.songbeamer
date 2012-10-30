@@ -117,9 +117,9 @@ class SngExportTests(unittest.TestCase):
         export_result = BytesIO()
         sng.export(export_result)
         self.assertEqual(
-            '#Version=3\r\n'
             '#Categories=foo bar, baz\r\n'
             '#Title=Mÿ nïcë=tïtlë\r\n'
+            '#Version=3\r\n'
             '---\r\n'
             'Textüäl cöntents\r\n'
             'inclüdig newlines\r\n'
@@ -155,6 +155,8 @@ class Sng2sngTests(unittest.TestCase):
                          err.exception.args)
 
     def test_output_is_equal_input_after_conversion(self):
+        # Caution: keys in `in_filename` are sorted, because export sorts
+        # keys alphabetically to be compatible accross python versions!
         in_filename = pkg_resources.resource_filename(
             'icemac.songbeamer.tests', 'example.sng')
         try:

@@ -21,10 +21,11 @@ Accessing a file's data
 
 The parsed data is stored in the ``data`` attribute of the object:
 
-  >>> sng.data
-  {'Text': ['La la la', '---', 'Lei lei lei'],
-   'Version': 3,
-   'Author': 'me'}
+  >>> from pprint import pprint
+  >>> pprint(sng.data)
+  {'Author': 'me',
+   'Text': ['La la la', '---', 'Lei lei lei'],
+   'Version': 3}
 
 To access the raw values imported from the .sng file get them using `getattr`:
 
@@ -34,7 +35,6 @@ To access the raw values imported from the .sng file get them using `getattr`:
 Exporting a .sng file
 =====================
 
-  >>> from pprint import pprint
   >>> from tempfile import TemporaryFile
 
 To export to a .sng file use the ``export`` method. It expects a byte stream (io.BytesIO or open file) as argument to write into:
@@ -43,8 +43,8 @@ To export to a .sng file use the ``export`` method. It expects a byte stream (io
   ...     sng.export(file)
   ...     _ = file.seek(0)
   ...     pprint(file.readlines())
-  [b'#Version=3\r\n',
-   b'#Author=me\r\n',
+  [b'#Author=me\r\n',
+   b'#Version=3\r\n',
    b'---\r\n',
    b'La la la\r\n',
    b'---\r\n',

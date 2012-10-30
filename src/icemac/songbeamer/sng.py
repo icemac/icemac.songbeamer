@@ -79,7 +79,7 @@ class SNG(metaclass=SNGMeta):
         return instance
 
     def export(self, byte_stream):
-        for key in self.data:
+        for key in sorted(self.data):
             if key == 'Text':
                 # Text needs to be the last line
                 continue
