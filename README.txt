@@ -35,3 +35,8 @@ or (with coverage analysis)::
   $ python3.2 setup.py nosetests
 
 
+Hacking
+=======
+
+Fork me on: https://bitbucket.org/icemac/icemac.songbeamer
+
