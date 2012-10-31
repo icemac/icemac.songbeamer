@@ -40,3 +40,4 @@ Hacking
 
 Fork me on: https://bitbucket.org/icemac/icemac.songbeamer
 
+https://secure.travis-ci.org/icemac/icemac.songbeamer.png

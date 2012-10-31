@@ -1,6 +1,7 @@
 language: python
 python:
   - "3.2"
-  - "3.3"
+# currently not supported on travis-ci.org
+#  - "3.3"
 script:
   - python setup.py test
