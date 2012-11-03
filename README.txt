@@ -21,7 +21,7 @@ structure there.
 Supported Python version
 ========================
 
-At least Python 3.2 is required.
+Runs on Python 3.2 and 3.3 is required.
 
 Running Tests
 =============
@@ -30,9 +30,11 @@ To run the tests call::
 
   $ python3.2 setup.py test -q
 
-or (with coverage analysis)::
+or (after having installed `nose`_ but with with coverage analysis)::
 
-  $ python3.2 setup.py nosetests
+  $ nosetests
+
+.. _`nose` : http://pypi.python.org/pypi/nose
 
 
 Hacking
