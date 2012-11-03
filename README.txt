@@ -21,7 +21,8 @@ structure there.
 Supported Python version
 ========================
 
-Runs on Python 3.2 and 3.3 is required.
+Runs on Python 3.2 and 3.3 is required. Older Python versions are not
+supported.
 
 Running Tests
 =============
