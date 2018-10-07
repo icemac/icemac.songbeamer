@@ -10,7 +10,7 @@ def read(path):
     return open(os.path.join(*path.split('/'))).read()
 
 
-version = '0.3'
+version = '0.4.dev0'
 
 
 setuptools.setup(
