@@ -53,16 +53,9 @@ setuptools.setup(
     namespace_packages=['icemac'],
     include_package_data=True,
     zip_safe=False,
-    setup_requires=[
-        ],
     install_requires=[
         'setuptools',
-        ],
-    tests_require=[
-        'nose>=1.0',
-        'coverage',
-        ],
-    test_suite="icemac.songbeamer.tests",
+    ],
     entry_points="""
       [console_scripts]
       sng2sng=icemac.songbeamer.sng:sng2sng
