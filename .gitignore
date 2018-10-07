@@ -4,3 +4,4 @@ __pycache__
 coverage-*
 icemac.songbeamer.egg-info
 nose-*
+.tox/

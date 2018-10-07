@@ -5,7 +5,9 @@
 0.3.0 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Add support for Python 3.5 to 3.7 and PyPy3.
+
+- Drop support for Python 3.2 and 3.3.
 
 
 0.2.0 (2012-10-31)

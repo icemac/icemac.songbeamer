@@ -21,7 +21,7 @@ structure there.
 Supported Python version
 ========================
 
-Runs on Python 3.2 and 3.3 is required. Older Python versions are not
+Runs on Python 3.5 up to 3.7 and PyPy3. Older Python versions are not
 supported.
 
 Running Tests
@@ -29,14 +29,9 @@ Running Tests
 
 To run the tests call::
 
-  $ python3.2 setup.py test -q
+  $ tox
 
-or (after having installed `nose`_ but with with coverage analysis)::
-
-  $ nosetests
-
-.. _`nose` : http://pypi.python.org/pypi/nose
-
+(You maybe have to install `tox` beforehand using: ``pip install tox``.)
 
 Hacking
 =======
