@@ -1,5 +1,5 @@
-syntax: glob
 .coverage
+.eggs/
 __pycache__
 coverage-*
 icemac.songbeamer.egg-info
