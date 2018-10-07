@@ -10,11 +10,8 @@ Library to read and write `SongBeamer`_ files.
 Supported SongBeamer versions
 =============================
 
-Currently only version Songbeamer version 2 is supported. (Internal version
+Currently Songbeamer version 2 to 4 is supported. (Internal version
 number in .sng files: ``#Version=3``.)
-
-I do not have access to other SongBeamer versions so I do not know the file
-structure there.
 
 .. _`SongBeamer` : http://songbeamer.com
 
@@ -36,7 +33,7 @@ To run the tests call::
 Hacking
 =======
 
-Fork me on: https://bitbucket.org/icemac/icemac.songbeamer
+Fork me on: https://github.com:/icemac/icemac.songbeamer
 
 .. image:: https://secure.travis-ci.org/icemac/icemac.songbeamer.png
    :target: https://travis-ci.org/icemac/icemac.songbeamer.png
