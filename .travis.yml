@@ -1,7 +1,16 @@
 language: python
+dist: xenial
+sudo: true
 python:
-  - "3.2"
-# currently not supported on travis-ci.org
-#  - "3.3"
+  - 3.5
+  - 3.6
+  - 3.7
+  - pypy3
+install:
+  - pip install tox_travis coveralls
 script:
-  - python setup.py test
+  - tox
+after_success:
+    - coveralls
+cache: pip
+

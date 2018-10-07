@@ -1,5 +1,7 @@
 include *.TXT
 include *.rst
+include .coveragerc
+include tox.ini
 
 exclude MANIFEST.in
 
