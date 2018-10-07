@@ -3,6 +3,11 @@
  icemac.songbeamer
 ===================
 
+.. image:: https://travis-ci.com/icemac/icemac.songbeamer.svg?branch=master
+    :target: https://travis-ci.com/icemac/icemac.songbeamer
+.. image:: https://coveralls.io/repos/github/icemac/icemac.songbeamer/badge.svg?branch=master
+    :target: https://coveralls.io/github/icemac/icemac.songbeamer?branch=master
+
 Library to read and write `SongBeamer`_ files.
 
 .. contents::
@@ -34,6 +39,3 @@ Hacking
 =======
 
 Fork me on: https://github.com:/icemac/icemac.songbeamer
-
-.. image:: https://secure.travis-ci.org/icemac/icemac.songbeamer.png
-   :target: https://travis-ci.org/icemac/icemac.songbeamer.png
