@@ -1,0 +1,7 @@
+include *.TXT
+include *.rst
+
+exclude MANIFEST.in
+
+recursive-include src *.rst
+recursive-include src *.sng
