@@ -46,7 +46,7 @@ setuptools.setup(
         'python 3 songbeamer import export'),
     author='Michael Howitz',
     author_email='icemac@gmx.net',
-    url='http://pypi.python.org/icemac.songbeamer',
+    url='https://github.com/icemac/icemac.songbeamer',
     license='ZPL 2.1',
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
