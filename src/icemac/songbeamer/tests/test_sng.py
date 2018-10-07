@@ -7,7 +7,6 @@ import difflib
 import io
 import os
 import pkg_resources
-import subprocess
 import sys
 import tempfile
 import unittest
@@ -46,6 +45,7 @@ class SngParseTests(unittest.TestCase):
                               'Möre text'],
                      'Title': 'Mÿ nïcë=tïtlë',
                      'Description': 'I wröte ä söng ...'}
+
     def test_parses_head_and_text_into_dict_from_bytes(self):
         self.assertEqual(self.SIMPLE_parsed,
                          self.callFUT(SIMPLE, as_stream=False))
@@ -55,11 +55,11 @@ class SngParseTests(unittest.TestCase):
                          self.callFUT(SIMPLE, as_stream=True))
 
     def test_post_processes_some_keys(self):
-        self.assertEqual(
-            {'Text': [],
-             'Categories': ['füü bär', 'asdf'],
-             'Version': 3
-                }, self.callFUT(CONVERTING_VALUES))
+        self.assertEqual({
+            'Text': [],
+            'Categories': ['füü bär', 'asdf'],
+            'Version': 3
+        }, self.callFUT(CONVERTING_VALUES))
 
 
 class SngPropertiesTests(unittest.TestCase):
@@ -163,9 +163,9 @@ class Sng2sngTests(unittest.TestCase):
             out_fd, out_filename = tempfile.mkstemp()
             os.close(out_fd)
             self.callFUT(in_filename, out_filename)
-            with open(in_filename, 'U') as in_file:
+            with open(in_filename, 'r') as in_file:
                 in_file_cont = in_file.readlines()
-            with open(out_filename, 'U') as out_file:
+            with open(out_filename, 'r') as out_file:
                 out_file_cont = out_file.readlines()
             # There are no differences between input and output:
             self.assertEqual(

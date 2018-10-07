@@ -23,7 +23,7 @@ setuptools.setup(
         read('CHANGES.rst'),
         read('TODO.rst'),
         read('src/icemac/songbeamer/USAGE.rst'),
-        ]),
+    ]),
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -41,7 +41,7 @@ setuptools.setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Text Processing :: Filters',
         'Topic :: Religion',
-        ],
+    ],
     keywords=(
         'python 3 songbeamer import export'),
     author='Michael Howitz',
@@ -49,8 +49,8 @@ setuptools.setup(
     url='http://pypi.python.org/icemac.songbeamer',
     license='ZPL 2.1',
     packages=setuptools.find_packages('src'),
-    package_dir = {'': 'src'},
-    namespace_packages = ['icemac'],
+    package_dir={'': 'src'},
+    namespace_packages=['icemac'],
     include_package_data=True,
     zip_safe=False,
     setup_requires=[
@@ -65,6 +65,6 @@ setuptools.setup(
     test_suite="icemac.songbeamer.tests",
     entry_points="""
       [console_scripts]
-      sng2sng = icemac.songbeamer.sng:sng2sng
+      sng2sng=icemac.songbeamer.sng:sng2sng
       """,
-    )
+)

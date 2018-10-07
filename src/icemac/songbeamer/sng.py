@@ -1,5 +1,3 @@
-# Copyright (c) 2012 Michael Howitz
-# See also LICENSE.txt
 from . import ENCODING
 from base64 import b64encode, b64decode
 import inspect
@@ -9,7 +7,8 @@ import re
 HEADLINE_RE = re.compile(b'^#(.*?)=(.*)$')
 
 
-int_to_bytes = lambda x: bytes(str(x), ENCODING)
+def int_to_bytes(x):
+    return bytes(str(x), ENCODING)
 
 
 # Properties which convert the data on set and get, so the presented value
@@ -17,20 +16,23 @@ int_to_bytes = lambda x: bytes(str(x), ENCODING)
 # SNG.data
 CONVERTING_PROPERTIES = [
     # name, get converter, set converter
-    ('Text', lambda x: ('\r\n'.join(x)).encode(ENCODING),
-             lambda x: x.decode(ENCODING).splitlines()),
+    ('Text',
+     lambda x: ('\r\n'.join(x)).encode(ENCODING),
+     lambda x: x.decode(ENCODING).splitlines()),
     ('Version', int_to_bytes, int),
     ('LangCount', int_to_bytes, int),
-    ('Comments', lambda x: b64encode(x.encode(ENCODING)),
-                 lambda x: b64decode(x).decode(ENCODING)),
-    ('Categories', lambda x: b', '.join(y.encode(ENCODING) for y in x),
-                   lambda x: [y.decode(ENCODING) for y in x.split(b', ')]),
-    ('Chords', lambda x: b64encode(
-        ('\r'.join(','.join(y) for y in x)).encode(ENCODING) + b'\r'),
-               lambda x: [
-                   y.split(',')
-                   for y in b64decode(x).decode(ENCODING).splitlines()]),
-    ]
+    ('Comments',
+     lambda x: b64encode(x.encode(ENCODING)),
+     lambda x: b64decode(x).decode(ENCODING)),
+    ('Categories',
+     lambda x: b', '.join(y.encode(ENCODING) for y in x),
+     lambda x: [y.decode(ENCODING) for y in x.split(b', ')]),
+    ('Chords',
+     lambda x: b64encode(('\r'.join(','.join(y)
+                         for y in x)).encode(ENCODING) + b'\r'),
+     lambda x: [y.split(',')
+                for y in b64decode(x).decode(ENCODING).splitlines()]),
+]
 
 
 def getter_factory(name, converter):
