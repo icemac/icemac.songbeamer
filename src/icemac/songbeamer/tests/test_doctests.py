@@ -1,4 +1,4 @@
-# Copyright (c) 2012 Michael Howitz
+# Copyright (c) 2012,2018 Michael Howitz
 # See also LICENSE.txt
 import doctest
 import os
@@ -21,7 +21,7 @@ optionflags = (doctest.REPORT_ONLY_FIRST_FAILURE |
 
 def test_suite():
     return doctest.DocFileSuite(
-        'USAGE.txt',
+        'USAGE.rst',
         package="icemac.songbeamer",
         setUp=setUp,
         tearDown=tearDown,

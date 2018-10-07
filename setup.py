@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2012 Michael Howitz
+# Copyright (c) 2012,2018 Michael Howitz
 # See also LICENSE.txt
 
 import os.path
 import setuptools
-import sys
 
 
 def read(path):
@@ -20,10 +19,10 @@ setuptools.setup(
     description=(
         "Python 3 library to import from and export to SongBeamer format."),
     long_description="\n\n".join([
-        read('README.txt'),
-        read('CHANGES.txt'),
-        read('TODO.txt'),
-        read('src/icemac/songbeamer/USAGE.txt'),
+        read('README.rst'),
+        read('CHANGES.rst'),
+        read('TODO.rst'),
+        read('src/icemac/songbeamer/USAGE.rst'),
         ]),
     classifiers=[
         'Development Status :: 3 - Alpha',
