@@ -1,7 +1,12 @@
 .coverage
 .eggs/
-__pycache__
-coverage-*
-icemac.songbeamer.egg-info
-nose-*
 .tox/
+__pycache__
+bin/
+coverage-*
+htmlcov/
+icemac.songbeamer.egg-info
+lib/
+nose-*
+pip-selfcheck.json
+pyvenv.cfg
