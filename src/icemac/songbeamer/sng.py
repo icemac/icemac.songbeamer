@@ -100,7 +100,11 @@ class SNG(metaclass=SNGMeta):
                 # Text needs to be the last line
                 continue
             byte_stream.write(
-                b'#'+key.encode(ENCODING)+b'='+getattr(self, key)+b'\r\n')
+                b'#'
+                + key.encode(ENCODING)
+                + b'='
+                + getattr(self, key)
+                + b'\r\n')
         byte_stream.write(b'---\r\n')
         if 'Text' in self.data:
             byte_stream.write(self.Text)
