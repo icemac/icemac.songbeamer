@@ -59,8 +59,13 @@ setuptools.setup(
     install_requires=[
         'setuptools',
     ],
+    extras_require=dict(
+        test=['xlrd'],
+        xls=['xlwt'],
+    ),
     entry_points="""
       [console_scripts]
       sng2sng=icemac.songbeamer.sng:sng2sng
+      songbeamer-xls-export=icemac.songbeamer.xls:main
       """,
 )

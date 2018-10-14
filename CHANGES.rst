@@ -10,11 +10,13 @@
 
 - Add class method ``.SNG.open()`` to open a file given by a path.
 
-
 - Class method ``.SNG.parse()`` now returns ``None`` if the file cannot be
   parsed and is logging an error message.
 
 - Make ``.SNG.export()`` robust against missing Text in songs.
+
+- Add a script exporting titles and song book numbers from folder containing
+  SongBeamer files to an XLS file.
 
 
 0.3 (2018-10-07)
