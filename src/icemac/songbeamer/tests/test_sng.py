@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2012 Michael Howitz
-# See also LICENSE.txt
-
 from .. import ENCODING
+from ..sng import SNG
 import difflib
 import io
 import os
@@ -28,31 +26,22 @@ CONVERTING_VALUES = """\
 ---
 """.encode(ENCODING)
 
+SIMPLE_parsed = {'Text': ['Textüäl cöntents',
+                          'inclüdig newlines',
+                          '---',
+                          'Möre text'],
+                 'Title': 'Mÿ nïcë=tïtlë',
+                 'Description': 'I wröte ä söng ...'}
+
 
 class SngParseTests(unittest.TestCase):
     """Testing ..sng.SNG.parse()."""
 
-    def callFUT(self, data, as_stream=False):
-        from io import BytesIO
-        from ..sng import SNG
-        if as_stream:
-            data = BytesIO(data)
+    def callFUT(self, data):
         return SNG.parse(data).data
 
-    SIMPLE_parsed = {'Text': ['Textüäl cöntents',
-                              'inclüdig newlines',
-                              '---',
-                              'Möre text'],
-                     'Title': 'Mÿ nïcë=tïtlë',
-                     'Description': 'I wröte ä söng ...'}
-
     def test_parses_head_and_text_into_dict_from_bytes(self):
-        self.assertEqual(self.SIMPLE_parsed,
-                         self.callFUT(SIMPLE, as_stream=False))
-
-    def test_parses_head_and_text_into_dict_from_byte_stream(self):
-        self.assertEqual(self.SIMPLE_parsed,
-                         self.callFUT(SIMPLE, as_stream=True))
+        self.assertEqual(SIMPLE_parsed, self.callFUT(SIMPLE))
 
     def test_post_processes_some_keys(self):
         self.assertEqual({
@@ -60,6 +49,12 @@ class SngParseTests(unittest.TestCase):
             'Categories': ['füü bär', 'asdf'],
             'Version': 3
         }, self.callFUT(CONVERTING_VALUES))
+
+
+def test_sng__SNG__open(tmpdir):
+    """It parses head and text into a dict from a file path."""
+    tmpdir.join('simple.sng').write_binary(SIMPLE)
+    SIMPLE_parsed == SNG.open(str(tmpdir.join('simple.sng'))).data
 
 
 class SngPropertiesTests(unittest.TestCase):
@@ -156,7 +151,7 @@ class Sng2sngTests(unittest.TestCase):
 
     def test_output_is_equal_input_after_conversion(self):
         # Caution: keys in `in_filename` are sorted, because export sorts
-        # keys alphabetically to be compatible accross python versions!
+        # keys alphabetically to be compatible across python versions!
         in_filename = pkg_resources.resource_filename(
             'icemac.songbeamer.tests', 'example.sng')
         try:

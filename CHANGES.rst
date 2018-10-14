@@ -8,6 +8,8 @@
 - Drop support for Python 3.5, 3.6 and PyPy3, thus only supporting Python 3.7
   now.
 
+- Add class method ``.SNG.open()`` to open a file given by a path.
+
 
 0.3 (2018-10-07)
 ================

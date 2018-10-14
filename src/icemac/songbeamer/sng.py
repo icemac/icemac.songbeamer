@@ -68,12 +68,15 @@ class SNG(metaclass=SNGMeta):
         self.__dict__['data'] = {}
 
     @classmethod
-    def parse(cls, bytes_or_byte_stream):
-        """Parse the contents of a .sng file to a dict."""
-        if isinstance(bytes_or_byte_stream, bytes):
-            data = bytes_or_byte_stream
-        else:
-            data = bytes_or_byte_stream.read()
+    def open(cls, path):
+        """Parse the contents of a .sng file into on instance."""
+        with open(path, 'rb') as f:
+            data = f.read()
+        return cls.parse(data)
+
+    @classmethod
+    def parse(cls, data):
+        """Parse bytes into an instance."""
         head, text = data.split(b'---', 1)
         instance = cls()
         instance.Text = text.strip()
@@ -118,6 +121,5 @@ def sng2sng():
     if len(sys.argv) != 3:
         print('Usage: {} <input-file> <output-file>'.format(sys.argv[0]))
         sys.exit(1)
-    with open(sys.argv[1], 'rb') as input:
-        with open(sys.argv[2], 'wb') as output:
-            SNG.parse(input).export(output)
+    with open(sys.argv[2], 'wb') as output:
+        SNG.open(sys.argv[1]).export(output)
