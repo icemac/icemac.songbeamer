@@ -76,8 +76,11 @@ class SNG(metaclass=SNGMeta):
 
     @classmethod
     def parse(cls, data):
-        """Parse bytes into an instance."""
-        head, text = data.split(b'---', 1)
+        """Parse bytes into an instance, return `None` if file not valid."""
+        try:
+            head, text = data.split(b'---', 1)
+        except ValueError:
+            return None
         instance = cls()
         instance.Text = text.strip()
         instance._parse_head(head.splitlines())

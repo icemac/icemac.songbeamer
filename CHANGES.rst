@@ -10,6 +10,10 @@
 
 - Add class method ``.SNG.open()`` to open a file given by a path.
 
+
+- Class method ``.SNG.parse()`` now returns ``None`` if the file cannot be
+  parsed.
+
 - Make ``.SNG.export()`` robust against missing Text in songs.
 
 

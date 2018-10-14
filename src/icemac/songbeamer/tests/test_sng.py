@@ -52,10 +52,15 @@ class SngParseTests(unittest.TestCase):
         }, self.callFUT(CONVERTING_VALUES))
 
 
-def test_sng__SNG__open(tmpdir):
+def test_sng__SNG__parse__2():
+    """It returns `None` if the file is not parsable."""
+    assert SNG.parse('äöü'.encode(ENCODING)) is None
+
+
+def test_sng__SNG__open__1(tmpdir):
     """It parses head and text into a dict from a file path."""
     tmpdir.join('simple.sng').write_binary(SIMPLE)
-    SIMPLE_parsed == SNG.open(str(tmpdir.join('simple.sng'))).data
+    assert SIMPLE_parsed == SNG.open(str(tmpdir.join('simple.sng'))).data
 
 
 class SngPropertiesTests(unittest.TestCase):
