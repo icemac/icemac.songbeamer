@@ -12,7 +12,7 @@
 
 
 - Class method ``.SNG.parse()`` now returns ``None`` if the file cannot be
-  parsed.
+  parsed and is logging an error message.
 
 - Make ``.SNG.export()`` robust against missing Text in songs.
 

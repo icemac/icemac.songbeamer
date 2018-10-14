@@ -2,8 +2,10 @@ from . import ENCODING
 from base64 import b64encode, b64decode
 import inspect
 import re
+import logging
 
 
+log = logging.getLogger(__name__)
 HEADLINE_RE = re.compile(b'^#(.*?)=(.*)$')
 
 
@@ -72,18 +74,24 @@ class SNG(metaclass=SNGMeta):
         """Parse the contents of a .sng file into on instance."""
         with open(path, 'rb') as f:
             data = f.read()
-        return cls.parse(data)
+        return cls.parse(data, filename=path)
 
     @classmethod
-    def parse(cls, data):
+    def parse(cls, data, filename='<bytes>'):
         """Parse bytes into an instance, return `None` if file not valid."""
         try:
             head, text = data.split(b'---', 1)
         except ValueError:
+            log.error(
+                '%r cannot be parsed: it does not contain `---`.', filename)
             return None
         instance = cls()
         instance.Text = text.strip()
-        instance._parse_head(head.splitlines())
+        try:
+            instance._parse_head(head.splitlines())
+        except ValueError as e:
+            log.error('%r cannot be parsed: %s', filename, e)
+            return None
         return instance
 
     def export(self, byte_stream):
@@ -98,8 +106,13 @@ class SNG(metaclass=SNGMeta):
             byte_stream.write(self.Text)
 
     def _parse_head(self, lines):
-        for line in lines:
-            key, value = HEADLINE_RE.search(line).groups()
+        for lineno, line in enumerate(lines, 1):
+            parsed_line = HEADLINE_RE.search(line)
+            try:
+                key, value = parsed_line.groups()
+            except AttributeError:
+                raise ValueError(
+                    f'Invalid data structure in line {lineno}: {line!r}')
             key = key.decode(ENCODING)
             setattr(self, key, value)
 

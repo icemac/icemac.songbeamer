@@ -52,9 +52,24 @@ class SngParseTests(unittest.TestCase):
         }, self.callFUT(CONVERTING_VALUES))
 
 
-def test_sng__SNG__parse__2():
-    """It returns `None` if the file is not parsable."""
-    assert SNG.parse('äöü'.encode(ENCODING)) is None
+def test_sng__SNG__parse__2(caplog):
+    """It returns `None` if the file is no SongBeamer file.
+
+    It is logging the name of the file.
+    """
+    assert SNG.parse('äöü'.encode(ENCODING), 'my-song.sng') is None
+    assert ("'my-song.sng' cannot be parsed: it does not contain `---`."
+            in caplog.text)
+
+
+def test_sng__SNG__parse__3(caplog):
+    """It returns `None` if the file contains invalid data structures.
+
+    It is logging the name of the file.
+    """
+    assert SNG.parse('a---b'.encode(ENCODING), 'my-song.sng') is None
+    assert ("'my-song.sng' cannot be parsed: Invalid data structure in line 1:"
+            " b'a'\n" in caplog.text)
 
 
 def test_sng__SNG__open__1(tmpdir):
