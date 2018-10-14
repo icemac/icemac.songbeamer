@@ -5,7 +5,8 @@
 0.4 (unreleased)
 ================
 
-- Nothing changed yet.
+- Drop support for Python 3.5, 3.6 and PyPy3, thus only supporting Python 3.7
+  now.
 
 
 0.3 (2018-10-07)
