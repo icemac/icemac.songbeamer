@@ -91,7 +91,8 @@ class SNG(metaclass=SNGMeta):
             byte_stream.write(
                 b'#'+key.encode(ENCODING)+b'='+getattr(self, key)+b'\r\n')
         byte_stream.write(b'---\r\n')
-        byte_stream.write(self.Text)
+        if 'Text' in self.data:
+            byte_stream.write(self.Text)
 
     def _parse_head(self, lines):
         for line in lines:

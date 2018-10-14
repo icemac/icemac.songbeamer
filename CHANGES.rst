@@ -10,6 +10,8 @@
 
 - Add class method ``.SNG.open()`` to open a file given by a path.
 
+- Make ``.SNG.export()`` robust against missing Text in songs.
+
 
 0.3 (2018-10-07)
 ================

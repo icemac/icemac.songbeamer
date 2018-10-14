@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from .. import ENCODING
 from ..sng import SNG
+from io import BytesIO
 import difflib
 import io
 import os
@@ -99,7 +100,7 @@ class SngExportTests(unittest.TestCase):
 
     def test_export_converts_data_back_to_byte_stream(self):
         from .. import SNG
-        from io import BytesIO
+
         sng = SNG()
         sng.data.update({
             'Version': 3,
@@ -120,6 +121,16 @@ class SngExportTests(unittest.TestCase):
             'inclüdig newlines\r\n'
             '---\r\n'
             'Möre text'.encode(ENCODING), export_result.getvalue())
+
+
+def test_sng__SNG__export__2():
+    """It does not break if there is no `Text` in the song."""
+    song = SNG()
+    song.data['Title'] = 'my title'
+    export_result = BytesIO()
+    song.export(export_result)
+    assert ('#Title=my title\r\n'
+            '---\r\n'.encode(ENCODING) == export_result.getvalue())
 
 
 class Sng2sngTests(unittest.TestCase):
