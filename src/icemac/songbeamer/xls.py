@@ -25,18 +25,18 @@ class Exporter:
 
     def __call__(self):
         songs = [
-            icemac.songbeamer.SNG.open(os.path.join(dirpath, x))
+            icemac.songbeamer.open(os.path.join(dirpath, x))
             for dirpath, dirnames, filenames in os.walk(self.src_dir)
             for x in filenames]
         songs = sorted([x for x in songs if x is not None],
-                       key=lambda x: x.data.get('Title', ''))
+                       key=lambda x: x.get('Title', ''))
         xlwt = get_xlwt()
         workbook = xlwt.Workbook()
         sheet = workbook.add_sheet('SongBeamer songs')
         for row, song in enumerate(songs):
-            sheet.write(row, 0, song.data.get('Title'))
-            sheet.write(row, 1, song.data.get('ChurchSongID'))
-            sheet.write(row, 2, song.data.get('Songbook'))
+            sheet.write(row, 0, song.get('Title'))
+            sheet.write(row, 1, song.get('ChurchSongID'))
+            sheet.write(row, 2, song.get('Songbook'))
         workbook.save(self.dest_file)
 
 

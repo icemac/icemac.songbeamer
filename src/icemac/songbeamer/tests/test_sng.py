@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from .. import ENCODING
-from ..sng import SNG
+from .. import sng
 from io import BytesIO
 import difflib
 import io
 import os
 import pkg_resources
+import pytest
 import sys
 import tempfile
 import unittest
@@ -36,10 +37,10 @@ SIMPLE_parsed = {'Text': ['Textüäl cöntents',
 
 
 class SngParseTests(unittest.TestCase):
-    """Testing ..sng.SNG.parse()."""
+    """Testing ..sng.parse()."""
 
     def callFUT(self, data):
-        return SNG.parse(data).data
+        return sng.parse(data)
 
     def test_parses_head_and_text_into_dict_from_bytes(self):
         self.assertEqual(SIMPLE_parsed, self.callFUT(SIMPLE))
@@ -52,22 +53,22 @@ class SngParseTests(unittest.TestCase):
         }, self.callFUT(CONVERTING_VALUES))
 
 
-def test_sng__SNG__parse__2(caplog):
+def test_sng__parse__2(caplog):
     """It returns `None` if the file is no SongBeamer file.
 
     It is logging the name of the file.
     """
-    assert SNG.parse('äöü'.encode(ENCODING), 'my-song.sng') is None
+    assert sng.parse('äöü'.encode(ENCODING), 'my-song.sng') is None
     assert ("'my-song.sng' cannot be parsed: it does not contain `---`."
             in caplog.text)
 
 
-def test_sng__SNG__parse__3(caplog):
+def test_sng__parse__3(caplog):
     """It returns `None` if the file contains invalid data structures.
 
     It is logging the name of the file.
     """
-    assert SNG.parse('a---b'.encode(ENCODING), 'my-song.sng') is None
+    assert sng.parse('a---b'.encode(ENCODING), 'my-song.sng') is None
     assert ("'my-song.sng' cannot be parsed: Invalid data structure in line 1:"
             " b'a'\n" in caplog.text)
 
@@ -75,44 +76,33 @@ def test_sng__SNG__parse__3(caplog):
 def test_sng__SNG__open__1(tmpdir):
     """It parses head and text into a dict from a file path."""
     tmpdir.join('simple.sng').write_binary(SIMPLE)
-    assert SIMPLE_parsed == SNG.open(str(tmpdir.join('simple.sng'))).data
+    assert SIMPLE_parsed == sng.open(str(tmpdir.join('simple.sng')))
 
 
-class SngPropertiesTests(unittest.TestCase):
-    """Testing ..sng.SNG's properties."""
+conversion_table = (
+    ('Title', 'Tïtlë'.encode(ENCODING), 'Tïtlë'),
+    ('Text', b'a\r\nb', ['a', 'b']),
+    ('Version', b'3', 3),
+    ('LangCount', b'1', 1),
+    ('Categories', 'föö, bar baz'.encode(ENCODING), ['föö', 'bar baz']),
+    ('Categories', b'qwe', ['qwe']),
+    ('Comments', b'5HNkZg==', 'äsdf'),
+    ('Chords', b'MTMsMCxEDTcsMTAsRQ0=', [['13', '0', 'D'], ['7', '10', 'E']]),
+)
 
-    def callPUT(self, name, raw_value, conv_value):
-        from ..sng import SNG
-        sng = SNG()
-        setattr(sng, name, raw_value)
-        self.assertEqual(conv_value, sng.data[name])
-        self.assertEqual(raw_value, getattr(sng, name))
 
-    def test_Title(self):
-        self.callPUT('Title', 'Tïtlë'.encode(ENCODING), 'Tïtlë')
+@pytest.mark.parametrize('key,input,output', conversion_table)
+def test_sng___Importer__import__1(key, input, output):
+    """It converts encoded values to text."""
+    importer = sng._Importer(ENCODING)
+    assert importer._import(key, input) == output
 
-    def test_Text(self):
-        self.callPUT('Text', b'a\r\nb', ['a', 'b'])
 
-    def test_Version(self):
-        self.callPUT('Version', b'3', 3)
-
-    def test_LangCount(self):
-        self.callPUT('LangCount', b'1', 1)
-
-    def test_Categories(self):
-        self.callPUT('Categories',
-                     'föö, bar baz'.encode(ENCODING),
-                     ['föö', 'bar baz'])
-        self.callPUT('Categories', b'qwe', ['qwe'])
-
-    def test_Comments(self):
-        self.callPUT('Comments', b'5HNkZg==', 'äsdf')
-
-    def test_Chords(self):
-        self.callPUT('Chords',
-                     b'MTMsMCxEDTcsMTAsRQ0=',
-                     [['13', '0', 'D'], ['7', '10', 'E']])
+@pytest.mark.parametrize('key,output,input', conversion_table)
+def test_sng___Exporter__export__1(key, output, input):
+    """It converts text to encoded values."""
+    importer = sng._Exporter(ENCODING, None, None)
+    assert importer._export(key, input) == output
 
 
 class SngExportTests(unittest.TestCase):
@@ -122,7 +112,7 @@ class SngExportTests(unittest.TestCase):
         from .. import SNG
 
         sng = SNG()
-        sng.data.update({
+        sng.update({
             'Version': 3,
             'Categories': ['foo bar', 'baz'],
             'Text': ['Textüäl cöntents',
@@ -145,8 +135,8 @@ class SngExportTests(unittest.TestCase):
 
 def test_sng__SNG__export__2():
     """It does not break if there is no `Text` in the song."""
-    song = SNG()
-    song.data['Title'] = 'my title'
+    song = sng.SNG()
+    song['Title'] = 'my title'
     export_result = BytesIO()
     song.export(export_result)
     assert ('#Title=my title\r\n'

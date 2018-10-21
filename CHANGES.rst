@@ -2,18 +2,37 @@
  Changes
 =========
 
-0.4 (unreleased)
+1.0 (unreleased)
 ================
+
+Backwards incompatible changes
+------------------------------
+
+- The ``icemac.songbeamer.SNG`` instances no longer store the data on the
+  `data` attribute but it is now a subclass of ``dict`` allowing direct dict
+  access to the data.
+
+- It is no longer possible to use attributes on ``icemac.songbeamer.SNG``
+  instances to read and store encoded bytes data. Either read/write text data
+  from/to the ``icemac.songbeamer.SNG`` instance using the `dict` API or use
+  the ``parse`` function (see next item) resp. use ``.SNG.exort()`` to export
+  the data encoded.
+
+- Add a function ``icemac.songbeamer.parse()`` convert a byte stream
+  into a ``icemac.songbeamer.SNG`` instance. It replaces the class method on
+  the `SNG` instance. It returns ``None`` if the data cannot be
+  parsed and it logs an error message.
 
 - Drop support for Python 3.5, 3.6 and PyPy3, thus only supporting Python 3.7
   now.
 
-- Add class method ``.SNG.open()`` to open a file given by a path.
+Features
+--------
 
-- Class method ``.SNG.parse()`` now returns ``None`` if the file cannot be
-  parsed and is logging an error message.
+- Add a function ``icemac.songbeamer.open()`` to open a file given by a path
+  and get a ``icemac.songbeamer.SNG`` instance.
 
-- Make ``.SNG.export()`` robust against missing Text in songs.
+- Make ``.SNG.export()`` robust against missing text in songs.
 
 - Add a script exporting titles and song book numbers from folder containing
   SongBeamer files to an XLS file.

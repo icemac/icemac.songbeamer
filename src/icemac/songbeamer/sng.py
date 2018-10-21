@@ -1,115 +1,83 @@
 from . import ENCODING
 from base64 import b64encode, b64decode
-import inspect
-import re
+import dataclasses
 import logging
+import re
+import typing
+
+
+__all__ = ['open', 'parse', 'SNG', 'sng2sng']
 
 
 log = logging.getLogger(__name__)
+_open = open
 HEADLINE_RE = re.compile(b'^#(.*?)=(.*)$')
 
 
-def int_to_bytes(x):
-    return bytes(str(x), ENCODING)
+def open(path):
+    """Open a .sng file and return a SNG instance."""
+    with _open(path, 'rb') as f:
+        data = f.read()
+    return parse(data, filename=path)
 
 
-# Properties which convert the data on set and get, so the presented value
-# is always the one from/for the .sng file, the converted is stored in
-# SNG.data
-CONVERTING_PROPERTIES = [
-    # name, get converter, set converter
-    ('Text',
-     lambda x: ('\r\n'.join(x)).encode(ENCODING),
-     lambda x: x.decode(ENCODING).splitlines()),
-    ('Version', int_to_bytes, int),
-    ('LangCount', int_to_bytes, int),
-    ('Comments',
-     lambda x: b64encode(x.encode(ENCODING)),
-     lambda x: b64decode(x).decode(ENCODING)),
-    ('Categories',
-     lambda x: b', '.join(y.encode(ENCODING) for y in x),
-     lambda x: [y.decode(ENCODING) for y in x.split(b', ')]),
-    ('Chords',
-     lambda x: b64encode(('\r'.join(','.join(y)
-                         for y in x)).encode(ENCODING) + b'\r'),
-     lambda x: [y.split(',')
-                for y in b64decode(x).decode(ENCODING).splitlines()]),
-]
+def parse(data, filename='<bytes>'):
+    """Parse bytes into a SNG instance, return `None` if data is not valid."""
+    importer = _Importer(encoding=ENCODING)
+    return importer.read(data, filename)
 
 
-def getter_factory(name, converter):
-    """Creates a getter for the converting property, reading pythonic value
-    from self.data and converting it to the value in .sng file"""
-    def getter(self):
-        return converter(self.data[name])
-    return getter
+class SNG(dict):
+    """Dict describing a .sng file."""
+
+    def export(self, byte_stream):
+        """Export .sng file contents to a byte_stream."""
+        exporter = _Exporter(ENCODING, byte_stream, self)
+        return exporter.export()
 
 
-def setter_factory(name, converter):
-    """Creates a setter for the converting property, storing a pythonic value
-    in self.data."""
-    def setter(self, value):
-        self.data[name] = converter(value)
-    return setter
+@dataclasses.dataclass
+class _Importer:
+    """Import data from a .sng file to an SNG instance."""
 
+    encoding: str
 
-class SNGMeta(type):
-    """Meta class defining converting properties for .sng files."""
+    _converters = {
+        'Text': lambda x, encoding: x.decode(encoding).splitlines(),
+        'Version': lambda x, encoding: int(x),
+        'LangCount': lambda x, encoding: int(x),
+        'Comments': lambda x, encoding: b64decode(x).decode(encoding),
+        'Categories': lambda x, encoding: [
+            y.decode(encoding) for y in x.split(b', ')],
+        'Chords': lambda x, encoding: [
+            y.split(',')
+            for y in b64decode(x).decode(encoding).splitlines()],
+    }
 
-    def __new__(mcs, name, bases, dict):
-        for name, get_converter, set_converter in CONVERTING_PROPERTIES:
-            dict[name] = property(fget=getter_factory(name, get_converter),
-                                  fset=setter_factory(name, set_converter))
-        return super(SNGMeta, mcs).__new__(mcs, name, bases, dict)
-
-
-class SNG(metaclass=SNGMeta):
-    """Class describing a .sng file."""
-
-    def __init__(self):
-        self.__dict__['data'] = {}
-
-    @classmethod
-    def open(cls, path):
-        """Parse the contents of a .sng file into on instance."""
-        with open(path, 'rb') as f:
-            data = f.read()
-        return cls.parse(data, filename=path)
-
-    @classmethod
-    def parse(cls, data, filename='<bytes>'):
-        """Parse bytes into an instance, return `None` if file not valid."""
+    def read(self, data, filename):
+        """Import into a SNG instance, return `None` if data is not valid."""
         try:
             head, text = data.split(b'---', 1)
         except ValueError:
             log.error(
                 '%r cannot be parsed: it does not contain `---`.', filename)
             return None
-        instance = cls()
-        instance.Text = text.strip()
+        sng = SNG()
+        sng['Text'] = self._import('Text', text.strip())
         try:
-            instance._parse_head(head.splitlines())
+            sng.update(self._parse_head(head.splitlines()))
         except ValueError as e:
             log.error('%r cannot be parsed: %s', filename, e)
             return None
-        return instance
+        return sng
 
-    def export(self, byte_stream):
-        for key in sorted(self.data):
-            if key == 'Text':
-                # Text needs to be the last line
-                continue
-            byte_stream.write(
-                b'#'
-                + key.encode(ENCODING)
-                + b'='
-                + getattr(self, key)
-                + b'\r\n')
-        byte_stream.write(b'---\r\n')
-        if 'Text' in self.data:
-            byte_stream.write(self.Text)
+    def _default_import(self, value, encoding=None):
+        if encoding is None:
+            encoding = self.encoding
+        return value.decode(encoding)
 
     def _parse_head(self, lines):
+        data = {}
         for lineno, line in enumerate(lines, 1):
             parsed_line = HEADLINE_RE.search(line)
             try:
@@ -117,23 +85,65 @@ class SNG(metaclass=SNGMeta):
             except AttributeError:
                 raise ValueError(
                     f'Invalid data structure in line {lineno}: {line!r}')
-            key = key.decode(ENCODING)
-            setattr(self, key, value)
+            key = self._default_import(key)
+            data[key] = self._import(key, value)
+        return data
 
-    def __setattr__(self, key, value):
-        # Caution: This __setattr__ is called always even if there are
-        # attributes or setter properties, so we have to handle the
-        # properties in a special way:
-        prop = inspect.getattr_static(self, key, None)
-        if prop:
-            # If there is a converting property, use it:
-            prop.fset(self, value)
-        else:
-            # There is no property for key, so store it plain:
-            self.data[key] = value.decode(ENCODING)
+    def _import(self, key, value):
+        converter = self._converters.get(key, self._default_import)
+        return converter(value, self.encoding)
 
-    def __getattr__(self, key):
-        return self.data[key].encode(ENCODING)
+
+@dataclasses.dataclass
+class _Exporter:
+    """Export an SNG instance to .sng file contents."""
+
+    encoding: str
+    stream: typing.BinaryIO
+    data: SNG
+
+    def export(self):
+        for key in sorted(self.data):
+            if key == 'Text':
+                # Text needs to be the last line
+                continue
+            value = self.data[key]
+            self.stream.write(
+                b'#%(key)s=%(value)s\r\n' % {
+                    b'key': self._default_export(key),
+                    b'value': self._export(key, value)
+                    })
+        self.stream.write(b'---\r\n')
+        if 'Text' in self.data:
+            self.stream.write(self._export('Text', self.data['Text']))
+
+    def _int_to_bytes(x, encoding):
+        return bytes(str(x), encoding)
+
+    def _chords_converter(x, encoding):
+        chords = [','.join(y) for y in x]
+        return b64encode(('\r'.join(chords)).encode(encoding) + b'\r')
+
+    def _categories_converter(x, encoding):
+        return b', '.join([y.encode(encoding) for y in x])
+
+    _converters = {
+        'Text': lambda x, encoding: ('\r\n'.join(x)).encode(encoding),
+        'Version': _int_to_bytes,
+        'LangCount': _int_to_bytes,
+        'Comments': lambda x, encoding: b64encode(x.encode(encoding)),
+        'Categories': _categories_converter,
+        'Chords': _chords_converter,
+    }
+
+    def _default_export(self, value, encoding=None):
+        if encoding is None:
+            encoding = self.encoding
+        return value.encode(encoding)
+
+    def _export(self, key, value):
+        converter = self._converters.get(key, self._default_export)
+        return converter(value, self.encoding)
 
 
 def sng2sng():
@@ -142,5 +152,5 @@ def sng2sng():
     if len(sys.argv) != 3:
         print('Usage: {} <input-file> <output-file>'.format(sys.argv[0]))
         sys.exit(1)
-    with open(sys.argv[2], 'wb') as output:
-        SNG.open(sys.argv[1]).export(output)
+    with _open(sys.argv[2], 'wb') as output:
+        open(sys.argv[1]).export(output)

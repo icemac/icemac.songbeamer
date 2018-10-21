@@ -10,7 +10,7 @@ def read(path):
     return open(os.path.join(*path.split('/'))).read()
 
 
-version = '0.4.dev0'
+version = '1.0.dev0'
 
 
 setuptools.setup(
@@ -60,7 +60,10 @@ setuptools.setup(
         'setuptools',
     ],
     extras_require=dict(
-        test=['xlrd'],
+        test=[
+            'pytest',
+            'xlrd',
+        ],
         xls=['xlwt'],
     ),
     entry_points="""

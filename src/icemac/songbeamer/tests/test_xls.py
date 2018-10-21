@@ -57,8 +57,7 @@ def test_xls__main__3(tmpdir, capfd):
 def test_xls__main__4(tmpdir):
     """It writes titles and numbers alphabetically sorted to an XLS file."""
     base_dir = tmpdir.mkdir('sb-files')
-    s1 = SNG()
-    s1.data.update({
+    s1 = SNG({
         'Title': 'Beta',
         'Songbook': 'SB 23',
         'ChurchSongID': 'CS 45',
@@ -66,14 +65,12 @@ def test_xls__main__4(tmpdir):
     })
     s1.export(base_dir.join('1.sng').open('wb'))
 
-    s2 = SNG()
-    s2.data.update({
+    s2 = SNG({
         'Title': 'Alpha',
     })
     s2.export(base_dir.join('2.sng').open('wb'))
 
-    s3 = SNG()
-    s3.data.update({
+    s3 = SNG({
         'ChurchSongID': 'CS 2411',
     })
     s3.export(base_dir.join('3.sng').open('wb'))
