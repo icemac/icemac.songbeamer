@@ -36,6 +36,7 @@ python ``dict`` API:
   {'Author': 'me',
    'Text': ['La la la', '---', 'Lei lei lei'],
    'Version': 3}
+  >>> sng['Title'] = 'Mÿ šôñg'
 
 The values are stored as numbers resp. strings (text):
 
@@ -57,6 +58,7 @@ To export to a .sng file use the ``export`` method. It expects a byte stream
   ...     _ = file.seek(0)
   ...     pprint(file.readlines())
   [b'#Author=me\r\n',
+   b'#Title=M\xff \x9a\xf4\xf1g\r\n',
    b'#Version=3\r\n',
    b'---\r\n',
    b'La la la\r\n',
