@@ -23,8 +23,7 @@ number in .sng files: ``#Version=3``.)
 Supported Python version
 ========================
 
-Runs on Python 3.5 up to 3.7 and PyPy3. Older Python versions are not
-supported.
+Runs only on Python 3.7. Older Python versions are not supported.
 
 Running Tests
 =============
