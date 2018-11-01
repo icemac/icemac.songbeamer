@@ -15,10 +15,10 @@ Backwards incompatible changes
 - It is no longer possible to use attributes on ``icemac.songbeamer.SNG``
   instances to read and store encoded bytes data. Either read/write text data
   from/to the ``icemac.songbeamer.SNG`` instance using the `dict` API or use
-  the ``parse`` function (see next item) resp. use ``.SNG.exort()`` to export
-  the data encoded.
+  the ``parse`` function (see next item) to import resp. use ``.SNG.export()``
+  to export the data encoded.
 
-- Add a function ``icemac.songbeamer.parse()`` convert a byte stream
+- Add a function ``icemac.songbeamer.parse()`` converting a byte stream
   into a ``icemac.songbeamer.SNG`` instance. It replaces the class method on
   the `SNG` instance. It returns ``None`` if the data cannot be
   parsed and it logs an error message.
@@ -34,8 +34,12 @@ Features
 
 - Make ``.SNG.export()`` robust against missing text in songs.
 
-- Add a script exporting titles and song book numbers from folder containing
-  SongBeamer files to an XLS file.
+- Add a command line script `songbeamer-xls-export` exporting titles and song
+  book numbers from folder containing SongBeamer files to an XLS file. To be
+  able to use it `icemac.songbeamer` has to be installed with the ``xls`` extra
+  like this::
+
+    $ pip install "icemac.songbeamer[xls]"
 
 - Support UTF-8 encoded SongBeamer files starting with the UTF-8 BOM.
 
