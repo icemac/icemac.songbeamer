@@ -1,8 +1,12 @@
 import argparse
 import dataclasses
 import icemac.songbeamer
+import logging
 import os
 import sys
+
+
+log = logging.getLogger(__name__)
 
 
 def get_xlwt():
@@ -34,7 +38,10 @@ class Exporter:
         workbook = xlwt.Workbook()
         sheet = workbook.add_sheet('SongBeamer songs')
         for row, song in enumerate(songs):
-            sheet.write(row, 0, song.get('Title'))
+            title = song.get('Title')
+            if not title:
+                log.warning('Missing Title in %r', song.filename)
+            sheet.write(row, 0, title)
             sheet.write(row, 1, song.get('ChurchSongID'))
             sheet.write(row, 2, song.get('Songbook'))
         workbook.save(self.dest_file)

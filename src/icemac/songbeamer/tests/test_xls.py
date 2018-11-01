@@ -54,10 +54,12 @@ def test_xls__main__3(tmpdir, capfd):
         "the following arguments are required: dest_file")
 
 
-def test_xls__main__4(tmpdir):
+def test_xls__main__4(tmpdir, caplog):
     """It writes titles and numbers alphabetically sorted to an XLS file."""
+    caplog.clear()
     base_dir = tmpdir.mkdir('sb-files')
-    s1 = SNG({
+    s1 = SNG()
+    s1.update({
         'Title': 'Beta',
         'Songbook': 'SB 23',
         'ChurchSongID': 'CS 45',
@@ -65,12 +67,14 @@ def test_xls__main__4(tmpdir):
     })
     s1.export(base_dir.join('1.sng').open('wb'))
 
-    s2 = SNG({
+    s2 = SNG()
+    s2.update({
         'Title': 'Alpha',
     })
     s2.export(base_dir.join('2.sng').open('wb'))
 
-    s3 = SNG({
+    s3 = SNG()
+    s3.update({
         'ChurchSongID': 'CS 2411',
     })
     s3.export(base_dir.join('3.sng').open('wb'))
@@ -91,3 +95,4 @@ def test_xls__main__4(tmpdir):
         ['Alpha', '', ''],
         ['Beta', 'CS 45', 'SB 23'],
     ] == got
+    assert "Missing Title in '3.sng'" in caplog.text

@@ -1,5 +1,6 @@
 from . import ENCODING
 from base64 import b64encode, b64decode
+from pathlib import Path
 import dataclasses
 import logging
 import re
@@ -32,8 +33,11 @@ def parse(data, filename='<bytes>'):
     return importer.read(data, filename)
 
 
+@dataclasses.dataclass(repr=False, eq=False, frozen=True)
 class SNG(dict):
     """Dict describing a .sng file."""
+
+    filename: str = '<bytes>'
 
     def export(self, byte_stream):
         """Export .sng file contents to a byte_stream."""
@@ -67,7 +71,7 @@ class _Importer:
             log.error(
                 '%r cannot be parsed: it does not contain `---`.', filename)
             return None
-        sng = SNG()
+        sng = SNG(filename=Path(filename).name)
         sng['Text'] = self._import('Text', text.strip())
         try:
             sng.update(self._parse_head(head.splitlines()))

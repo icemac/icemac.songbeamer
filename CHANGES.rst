@@ -9,7 +9,7 @@ Backwards incompatible changes
 ------------------------------
 
 - The ``icemac.songbeamer.SNG`` instances no longer store the data on the
-  `data` attribute but it is now a subclass of ``dict`` allowing direct dict
+  `data` attribute but it now behaves like a ``dict`` thus allowing direct dict
   access to the data.
 
 - It is no longer possible to use attributes on ``icemac.songbeamer.SNG``

@@ -84,7 +84,9 @@ def test_sng__parse__4():
 def test_sng__open__1(tmpdir):
     """It parses head and text into a dict from a file path."""
     tmpdir.join('simple.sng').write_binary(SIMPLE)
-    assert SIMPLE_parsed == sng.open(str(tmpdir.join('simple.sng')))
+    song = sng.open(str(tmpdir.join('simple.sng')))
+    assert SIMPLE_parsed == song
+    assert 'simple.sng' == song.filename
 
 
 conversion_table = (
