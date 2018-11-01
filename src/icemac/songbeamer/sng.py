@@ -23,7 +23,12 @@ def open(path):
 
 def parse(data, filename='<bytes>'):
     """Parse bytes into a SNG instance, return `None` if data is not valid."""
-    importer = _Importer(encoding=ENCODING)
+    if data.startswith(b'\xef\xbb\xbf'):
+        encoding = 'utf-8'
+        data = data[3:]
+    else:
+        encoding = ENCODING
+    importer = _Importer(encoding=encoding)
     return importer.read(data, filename)
 
 
@@ -40,7 +45,7 @@ class SNG(dict):
 class _Importer:
     """Import data from a .sng file to an SNG instance."""
 
-    encoding: str
+    encoding: str = ENCODING
 
     _converters = {
         'Text': lambda x, encoding: x.decode(encoding).splitlines(),

@@ -37,6 +37,8 @@ Features
 - Add a script exporting titles and song book numbers from folder containing
   SongBeamer files to an XLS file.
 
+- Support UTF-8 encoded SongBeamer files starting with the UTF-8 BOM.
+
 
 0.3 (2018-10-07)
 ================

@@ -73,7 +73,15 @@ def test_sng__parse__3(caplog):
             " b'a'\n" in caplog.text)
 
 
-def test_sng__SNG__open__1(tmpdir):
+def test_sng__parse__4():
+    """It is able to parse files starting with a UTF-8 BOM."""
+    song = sng.parse(b'\xef\xbb\xbf#Title=B\xc3\xa4r---Tek\xc3\x9ft')
+    assert song is not None
+    assert {'Title': 'Bär',
+            'Text': ['Tekßt']} == song
+
+
+def test_sng__open__1(tmpdir):
     """It parses head and text into a dict from a file path."""
     tmpdir.join('simple.sng').write_binary(SIMPLE)
     assert SIMPLE_parsed == sng.open(str(tmpdir.join('simple.sng')))
