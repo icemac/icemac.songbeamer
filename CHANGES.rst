@@ -2,7 +2,7 @@
  Changes
 =========
 
-1.0 (unreleased)
+1.0 (2018-11-02)
 ================
 
 Backwards incompatible changes
