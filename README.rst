@@ -10,6 +10,9 @@
 
 Library to read and write `SongBeamer`_ files.
 
+This package is licensed under the MIT License, see LICENSE.TXT inside the
+package.
+
 .. contents::
 
 Supported SongBeamer versions

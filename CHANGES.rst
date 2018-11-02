@@ -43,6 +43,8 @@ Features
 
 - Support UTF-8 encoded SongBeamer files starting with the UTF-8 BOM.
 
+- Change license from ZPL to MIT.
+
 
 0.3 (2018-10-07)
 ================
