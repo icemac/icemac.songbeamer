@@ -18,7 +18,7 @@ package.
 Supported SongBeamer versions
 =============================
 
-Currently Songbeamer version 2 to 4 is supported. (Internal version
+Currently Songbeamer versions 2 to 4 are supported. (Internal version
 number in .sng files: ``#Version=3``.)
 
 .. _`SongBeamer` : http://songbeamer.com
