@@ -25,7 +25,7 @@ setuptools.setup(
         read('src/icemac/songbeamer/USAGE.rst'),
     ]),
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Intended Audience :: Religion',
         'License :: OSI Approved',
