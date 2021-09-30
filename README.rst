@@ -40,4 +40,4 @@ To run the tests call::
 Hacking
 =======
 
-Fork me on: https://github.com:/icemac/icemac.songbeamer
+Fork me at: https://github.com/icemac/icemac.songbeamer
